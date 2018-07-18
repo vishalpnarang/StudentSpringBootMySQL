@@ -25,51 +25,101 @@ public class StudentController {
 
 	@Autowired
 	StudentRepository repository;
-	
+
 	// get all students
 	@GetMapping("/students")
-	public List<Student> getAllStudents(){
+	public List<Student> getAllStudents() {
 		return repository.findAll();
 	}
-	
+
 	// add new student
 	@PostMapping("/student")
-	public Student createStudent(@Valid @RequestBody Student student){
+	public Student createStudent(@Valid @RequestBody Student student) {
 		return repository.save(student);
 	}
-	
-	// get single student
+
+	// get single student by id
 	@GetMapping("student/{id}")
-	public Student getStudentById(@PathVariable(value = "id")int rollNo){
-		return repository.findById(rollNo)
-				.orElseThrow(() -> new ResourceNotFoundException("Student", "id", rollNo));
+	public Student getStudentById(@PathVariable(value = "id") int rollNo) {
+		return repository.findById(rollNo).orElseThrow(() -> new ResourceNotFoundException("Student", "id", rollNo));
 	}
-	
+
+	// get students by first name
+	@GetMapping("students/name/{name}")
+	public List<Student> getStudentByFirstName(@PathVariable(value = "name") String name) {
+		return repository.findAllByFirstName(name);
+	}
+
+	// get math's toper
+	@GetMapping("student/maths")
+	public Student getMathsTopper() {
+		Student student = (Student) repository.getMaxMathsScorer().get(0);
+		return student;
+	}
+
+	// get Science toper
+	@GetMapping("student/science")
+	public Student getScienceTopper() {
+		Student student = (Student) repository.getMaxScienceScorer().get(0);
+		return student;
+	}
+
+	// get English toper
+	@GetMapping("student/english")
+	public Student getEnglishTopper() {
+		Student student = (Student) repository.getMaxEnglishScorer().get(0);
+		return student;
+	}
+
 	// update a student
 	@PutMapping("student/{id}")
-	public Student updateSyudent(@PathVariable(value = "id")int rollNo, @Valid @RequestBody Student studentDetails){
-		
+	public Student updateSyudent(@PathVariable(value = "id") int rollNo, @Valid @RequestBody Student studentDetails) {
+
 		Student student = repository.findById(rollNo)
-				.orElseThrow(() -> new ResourceNotFoundException("Student","id",rollNo));
-		
+				.orElseThrow(() -> new ResourceNotFoundException("Student", "id", rollNo));
+
 		student.setFirstName(studentDetails.getFirstName());
 		student.setLastName(studentDetails.getLastName());
 		student.setMathsMarks(studentDetails.getMathsMarks());
 		student.setScienceMarks(studentDetails.getScienceMarks());
 		student.setEnglishMarks(studentDetails.getEnglishMarks());
-		
+
 		Student updatedStudent = repository.save(student);
 		return updatedStudent;
 	}
-	
+
 	// delete a student
 	@DeleteMapping("/student/{id}")
-	public ResponseEntity<?> deleteStudent(@PathVariable(value = "id")int rollNo){
+	public ResponseEntity<?> deleteStudent(@PathVariable(value = "id") int rollNo) {
 		Student student = repository.findById(rollNo)
 				.orElseThrow(() -> new ResourceNotFoundException("Student", "id", rollNo));
-		
+
 		repository.delete(student);
-		
+
 		return ResponseEntity.ok().build();
+	}
+
+	// sorted list by first name
+	@GetMapping("/students/sorted/firstname/asc")
+	public List<Student> sortedListFirstName() {
+		return repository.getStudentsSortedFirstName();
+	}
+
+	// sorted list by last name
+	@GetMapping("/students/sorted/lastname/asc")
+	public List<Student> sortedListLastName() {
+		return repository.getStudentsSortedLastName();
+	}
+
+	// sorted list by first name desc
+	@GetMapping("/students/sorted/firstname/desc")
+	public List<Student> sortedListFirstNameDesc() {
+		return repository.getStudentsSortedFirstNameDesc();
+	}
+
+	// sorted list by last name desc
+	@GetMapping("/students/sorted/lastname/desc")
+	public List<Student> sortedListLastNameDesc() {
+		return repository.getStudentsSortedLastNameDesc();
 	}
 }
