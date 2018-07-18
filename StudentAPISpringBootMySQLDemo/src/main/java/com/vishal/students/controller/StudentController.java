@@ -99,25 +99,25 @@ public class StudentController {
 		return ResponseEntity.ok().build();
 	}
 
-	// sorted list by first name
+	// sorted list by first name ascending
 	@GetMapping("/students/sorted/firstname/asc")
 	public List<Student> sortedListFirstName() {
 		return repository.getStudentsSortedFirstName();
 	}
 
-	// sorted list by last name
+	// sorted list by last name ascending
 	@GetMapping("/students/sorted/lastname/asc")
 	public List<Student> sortedListLastName() {
 		return repository.getStudentsSortedLastName();
 	}
 
-	// sorted list by first name desc
+	// sorted list by first name descending
 	@GetMapping("/students/sorted/firstname/desc")
 	public List<Student> sortedListFirstNameDesc() {
 		return repository.getStudentsSortedFirstNameDesc();
 	}
 
-	// sorted list by last name desc
+	// sorted list by last name descending
 	@GetMapping("/students/sorted/lastname/desc")
 	public List<Student> sortedListLastNameDesc() {
 		return repository.getStudentsSortedLastNameDesc();
