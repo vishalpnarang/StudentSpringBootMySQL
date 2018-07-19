@@ -11,8 +11,11 @@ import com.vishal.students.model.Student;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Integer>{
 
-	public List<Student> findAllByFirstName(String name);
-	public List<Student> findAllByLastName(String name);
+	//@Query(value = "from Student s where s.firstName LIKE CONCAT('%',:name,'%')")
+	public List<Student> findByFirstNameContaining(String name);
+	
+	@Query(value = "from Student s where s.lastName LIKE CONCAT('%',:name,'%')")
+	public List<Student> findAllByLastNameIgnoreCaseContaining(String name);
 	
 	@Query(value = "from Student s where mathsMarks = (select max(mathsMarks) from Student)")
 	public List<Student> getMaxMathsScorer();
