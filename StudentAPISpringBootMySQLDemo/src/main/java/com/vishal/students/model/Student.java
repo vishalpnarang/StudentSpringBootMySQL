@@ -13,6 +13,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -32,19 +34,23 @@ public class Student implements Serializable{
 	@Column(name = "Roll_No")
 	private int rollno;
 	
-	@NotBlank
+	@NotBlank(message = "First Name cannot be blank")
 	@Column(name = "First_Name")
 	private String firstName;
 	
+	@NotNull(message = "Last Name cannot be Null")
 	@Column(name = "Last_Name")
 	private String lastName;
 	
+	@Size(min=1, max=2,message = "Marks should be between 0 and 99")
 	@Column(name = "Marks_Maths")
 	private int mathsMarks;
 	
+	@Size(min=1, max=2,message = "Marks should be between 0 and 99")
 	@Column(name = "Marks_Science")
 	private int scienceMarks;
 	
+	@Size(min=1, max=2,message = "Marks should be between 0 and 99")
 	@Column(name = "Marks_English")
 	private int englishMarks;
 	
@@ -58,6 +64,27 @@ public class Student implements Serializable{
     @LastModifiedDate
     private Date updatedAt;
 
+    /* 
+        DecimalMax
+		DecimalMin
+		Digits
+		Email
+		Future
+		FutureOrPresent
+		Max
+		Min
+		Negative
+		NegativeOrZero
+		NotBlank
+		NotEmpty
+		NotNull
+		Null
+		Past
+		PastOrPresent
+		Pattern
+		Positive
+		PositiveOrZero
+     * */
 
 	public int getRollno() {
 		return rollno;

@@ -23,6 +23,12 @@ import com.vishal.students.repository.StudentRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/api")
 @Api(value = "Student Controllers", description = "Student CRUD operations along with other API's.")
@@ -46,10 +52,34 @@ public class StudentController {
 	}
 
 	// get single student by id
-	@GetMapping("student/{id}")
+	/*
+	 * @GetMapping("student/{id}")
+	 * 
+	 * @ApiOperation(value = "Get Student Details", notes = "Requires Roll No")
+	 * public Student getStudentByRollNo(@PathVariable(value = "id") int rollNo)
+	 * { return repository.findById(rollNo).orElseThrow(() -> new
+	 * ResourceNotFoundException("Student", "id", rollNo)); }
+	 */
+
+	@GetMapping("/student/{id}")
 	@ApiOperation(value = "Get Student Details", notes = "Requires Roll No")
-	public Student getStudentByRollNo(@PathVariable(value = "id") int rollNo) {
-		return repository.findById(rollNo).orElseThrow(() -> new ResourceNotFoundException("Student", "id", rollNo));
+	public Resource<Student> retrieveStudent(@PathVariable int id) {
+		Optional<Student> student = repository.findById(id);
+
+		if (!student.isPresent())
+			throw new ResourceNotFoundException("id-", "student", id);
+
+		Resource<Student> resource = new Resource<Student>(student.get());
+
+		ControllerLinkBuilder linkTo = linkTo(methodOn(this.getClass()).getAllStudents());
+		ControllerLinkBuilder linkToDelete = linkTo(methodOn(this.getClass()).deleteStudent(id));
+		ControllerLinkBuilder linkToUpdate = linkTo(methodOn(this.getClass()).updateStudent(id, new Student()));
+		
+		resource.add(linkTo.withRel("View All students"));
+		resource.add(linkToDelete.withRel("Delete Student"));
+		resource.add(linkToUpdate.withRel("Update Student"));
+
+		return resource;
 	}
 
 	// get students by first name

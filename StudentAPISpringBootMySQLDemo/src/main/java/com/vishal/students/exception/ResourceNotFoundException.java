@@ -3,6 +3,12 @@ package com.vishal.students.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+/*  404 - RESOURCE NOT FOUND
+	400 - BAD REQUEST
+	401 - UNAUTHORIZED
+	415 - UNSUPPORTED TYPE - Representation not supported for the resource
+	500 - SERVER ERROR*/
+
 @SuppressWarnings("serial")
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
 public class ResourceNotFoundException extends RuntimeException{
